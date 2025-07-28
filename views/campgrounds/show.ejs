@@ -44,7 +44,7 @@
     </div>
   </div>
   <div class="col-6">
-    <div id='map' style="max-height: 300px; max-width: 400px;"></div>
+    <div id='map'></div>
     <% if(currentUser) { %>
       <h2>Leave a Review</h2>
       <form action="/campgrounds/<%=campground._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -77,6 +77,13 @@
     </form>
     <% } %>
     <h2>Reviews</h2>
+    <% if(campground.reviews.length < 1) {%>
+      <br>
+      <p><b>No reviews</b></p>
+    <% }%>
+    <% if(!currentUser) {%>
+      <p><a href="/login">Login</a> or <a href="/register">Sign Up</a> to add a review</p>
+    <% }%>
     <% for(let review of campground.reviews) { %>
       <div class="card mb-3">
         <div class="card-body">
