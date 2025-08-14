@@ -30,7 +30,7 @@
 							<label for="price" class="form-label">Campground Price</label>
 							<div class="input-group">
 								<span class="input-group-text" id="price-label">$</span>
-								<input id="price" type="text" class="form-control" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]" value="<%= campground.price %>" required>
+								<input id="price" type="number" class="form-control" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]" value="<%= campground.price %>" min="0" required>
 								<div class="valid-feedback">Looks Good!</div>
 								<div class="invalid-feedback">Invalid Input</div>
 							</div>

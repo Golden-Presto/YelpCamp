@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card shadow">
-            <h1 class="card-title text-center">New Campground</h1>
+            <h1 class="card-title text-center pt-3">New Campground</h1>
             <div class="card-body">
                 <form action="/campgrounds" method="POST" class="validated-form" enctype="multipart/form-data" novalidate>
                     <div class="mb-3">
@@ -29,7 +29,7 @@
                         <label for="price" class="form-label">Campground Price</label>
                         <div class="input-group">
                             <span class="input-group-text" id="price-label">$</span>
-                            <input id="price" type="number" class="form-control" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]" required>
+                            <input id="price" type="number" class="form-control" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]" min="0" required>
                             <div class="valid-feedback">Looks Good!</div>
                             <div class="invalid-feedback">Invalid Input</div>
                         </div>

@@ -3,6 +3,13 @@
 <div class="mb-6" id="cluster-map" crossorigin="anonymous"></div>
 <h1>All campgrounds</h1>
 
+<% if(campgrounds.length < 1) {%>
+    <br>
+    <p><b>No campgrounds</b></p>
+  <% }%>
+  <% if(!currentUser) {%>
+    <p><a href="/login">Login</a> or <a href="/register">Sign Up</a> to add a review</p>
+  <% }%>
 <% for (let campground of campgrounds) {%>
     <div class="card mb-3">
         <div class="row">

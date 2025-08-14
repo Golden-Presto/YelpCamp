@@ -13,15 +13,17 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const helmet = require('helmet');
-const User = require('./models/user');
+const User = require('./models/user'); 
+const dbUrl = 'mongodb://localhost:27017/yelp-camp';
 
 const mongoSanitize = require('express-mongo-sanitize');
 
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
-const userRoutes = require('./routes/users')
+const userRoutes = require('./routes/users');
+const MongoStore = require('connect-mongo');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp');
+mongoose.connect(dbUrl);
 const db = mongoose.connection; 
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", () => {
@@ -40,7 +42,18 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
+const store = new MongoStore({
+    mongoUrl: dbUrl, 
+    secret: 'ABC!', 
+    touchAfter: 24 * 60 * 60
+})
+
+store.on("error", function(e) {
+    console.log("SESSION STORE ERROR", e)
+})
+
 const sessionConfig = {
+    store,
     name: 'session',
     secret: 'ABC!', 
     resave: false, 
@@ -56,6 +69,58 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com",
+    "https://api.tiles.mapbox.com",
+    "https://api.mapbox.com",
+    "https://kit.fontawesome.com",
+    "https://cdnjs.cloudflare.com",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.maptiler.com",           // MapTiler SDK
+    "https://unpkg.com",                  // Leaflet & MarkerCluster
+    "https://cdn.jsdelivr.net"
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com",
+    "https://stackpath.bootstrapcdn.com",
+    "https://api.mapbox.com",
+    "https://api.tiles.mapbox.com",
+    "https://fonts.googleapis.com",
+    "https://use.fontawesome.com",
+    "https://cdn.maptiler.com",           // MapTiler CSS
+    "https://unpkg.com",                  // Leaflet & MarkerCluster CSS
+    "https://cdn.jsdelivr.net"
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com",
+    "https://*.tiles.mapbox.com",
+    "https://events.mapbox.com",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            childSrc: ["blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/dxhke516n/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com",
+                "https://api.maptiler.com", 
+                "https://unpkg.com"
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
 
 app.use(passport.initialize()); 
 app.use(passport.session());

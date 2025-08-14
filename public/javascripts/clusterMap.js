@@ -7,7 +7,7 @@ L.tileLayer(`https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${maptile
 }).addTo(map);
 
 const markers = L.markerClusterGroup();
-const bounds = L.latLngBounds(); // ✅ Correctly initialized
+const bounds = L.latLngBounds(); 
 
 campgrounds.features.forEach(feature => {
     const [lng, lat] = feature.geometry.coordinates;
