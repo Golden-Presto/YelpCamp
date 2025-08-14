@@ -14,7 +14,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const helmet = require('helmet');
 const User = require('./models/user'); 
-const dbUrl = 'mongodb://localhost:27017/yelp-camp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+const port = process.env.PORT || 3000;
 
 const mongoSanitize = require('express-mongo-sanitize');
 
@@ -112,7 +113,7 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/dxhke516n/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://res.cloudinary.com/dxhke516n/", 
                 "https://images.unsplash.com",
                 "https://api.maptiler.com", 
                 "https://unpkg.com"
@@ -155,6 +156,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', {err});
 })
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
+app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
 });
