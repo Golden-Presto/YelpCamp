@@ -36,8 +36,13 @@ h3 {
 } 
 
 .btn-secondary {
-    color: #333;
+    color: #888;
     text-shadow: none;
     font-weight: bold;
 }
 
+.btn-secondary:hover {
+    color: #111;
+    text-shadow: none;
+    font-weight: bold;
+}
